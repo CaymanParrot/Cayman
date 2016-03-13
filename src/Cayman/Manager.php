@@ -5,6 +5,8 @@
 
 namespace Cayman;
 
+use Cayman\Library\Settings;
+
 /**
  * Class for Manager
  * 
