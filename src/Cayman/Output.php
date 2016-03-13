@@ -19,7 +19,7 @@ class Output
      * Status
      * @var string
      */
-    public $status;
+    public $status = 'success';
     
     /**
      * Set status
@@ -49,7 +49,7 @@ class Output
      */
     public function appendError(Error $row, $key = null)
     {
-        $this->status   = Output::STATUS_ERROR;
+        $this->status = Output::STATUS_ERROR;
         if (is_null($key)) {
             $this->errors[] = $row;
         } else {
