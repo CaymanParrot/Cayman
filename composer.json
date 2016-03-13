@@ -17,7 +17,6 @@
     "autoload": {
         "psr-4": { "Cayman\\": "src/" }
     },
-    "target-dir": "src",
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
