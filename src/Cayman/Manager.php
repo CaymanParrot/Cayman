@@ -14,6 +14,9 @@ abstract class Manager
     use ApplicationTrait;
     use SettingsTrait;
     
+    use Manager\PdoTrait;
+    use Manager\RedisTrait;
+    
     use Manager\AssetManagerTrait;
     use Manager\CacheManagerTrait;
     use Manager\DbManagerTrait;
@@ -72,8 +75,16 @@ abstract class Manager
         $managers = $settings->managers;//dependencies
         $id       = $managers && $managers->$type ? $managers->$type : 'default';
         $manager  = $this->getApp()->getManager($type, $id);
+        
         $func = 'set' . $type . 'Manager';
-        $this->$func($manager);//to use next time
+        if (method_exists($this, $func)) {
+            $this->$func($manager);//to use next time
+        } else {
+            $func = 'set' . $type;// for pdo and redis
+            if (method_exists($this, $func)) {
+                $this->$func($manager);//to use next time
+            }
+        }
         
         return $manager;
     }
