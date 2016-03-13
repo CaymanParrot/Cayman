@@ -14,6 +14,20 @@ abstract class Manager
     use ApplicationTrait;
     use SettingsTrait;
     
+    use Manager\AssetManagerTrait;
+    use Manager\CacheManagerTrait;
+    use Manager\DbManagerTrait;
+    use Manager\DbSchemaManagerTrait;
+    use Manager\EmailManagerTrait;
+    use Manager\EntityManagerTrait;
+    use Manager\EventManagerTrait;
+    use Manager\FilterManagerTrait;
+    use Manager\IdentityManagerTrait;
+    use Manager\LocaleManagerTrait;
+    use Manager\LogManagerTrait;
+    use Manager\QueueManagerTrait;
+    use Manager\ReleaseManagerTrait;
+    
     /**
      * Identifier for manager
      * esp. when there are multiple instances with different implementations
@@ -55,10 +69,13 @@ abstract class Manager
     function getManager($type)
     {
         $settings = $this->getSettings();
-        $id       = $settings->$type ?: 'default';
-        $result   = $this->getApp()->getManager($type, $id);
+        $managers = $settings->managers;//dependencies
+        $id       = $managers && $managers->$type ? $managers->$type : 'default';
+        $manager  = $this->getApp()->getManager($type, $id);
+        $func = 'set' . $type . 'Manager';
+        $this->$func($manager);//to use next time
         
-        return $result;
+        return $manager;
     }
     
     /**

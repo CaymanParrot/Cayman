@@ -51,6 +51,25 @@ class Container
     }
     
     /**
+     * Magic property checker
+     * @param string $key
+     * @return bool
+     */
+    function __isset($key)
+    {
+        return isset($this->data[$key]);
+    }
+    
+    /**
+     * Magic property unsetter
+     * @param string $key
+     */
+    function __unset($key)
+    {
+        unset($this->data[$key]);
+    }
+    
+    /**
      * Magic property getter
      * @param string $key
      * @return mixed

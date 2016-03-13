@@ -17,6 +17,7 @@ use Cayman\Manager\DbManager;
  */
 class PostgreSql extends Manager implements DbManager
 {
+    use Manager\PdoManagerTrait;
     
     /**
      * Begin transaction
@@ -24,7 +25,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbBeginTransaction()
     {
-        return $this->getPdo()->beginTransaction();
+        return $this->getPdoManager()->beginTransaction();
     }
     
     /**
@@ -33,7 +34,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbCommitTransaction()
     {
-        return $this->getPdo()->commit();
+        return $this->getPdoManager()->commit();
     }
     
     /**
@@ -42,7 +43,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbRollbackTransaction()
     {
-        return $this->getPdo()->rollBack();
+        return $this->getPdoManager()->rollBack();
     }
     
     /**
@@ -55,9 +56,9 @@ class PostgreSql extends Manager implements DbManager
     function dbStatement($sql, array $params = [])
     {
         if (empty($params)) {
-            $statement = $this->getPdo()->query($sql);
+            $statement = $this->getPdoManager()->query($sql);
         } else {
-            $statement = $this->getPdo()->prepare($sql);
+            $statement = $this->getPdoManager()->prepare($sql);
             $statement->execute($params);
         }
         $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);

@@ -15,34 +15,7 @@ use Cayman\Manager\CacheManager;
  */
 class RedisCache extends Manager implements CacheManager
 {
-    /**
-     * Redis object
-     * @var \Redis
-     */
-    private $redis;
-    
-    /**
-     * Set Redis
-     * @param \Redis $redis
-     * @return void
-     */
-    function setRedis(\Redis $redis)
-    {
-        $this->redis = $redis;
-    }
-    
-    /**
-     * Get Redis
-     * @return \Redis
-     */
-    function getRedis()
-    {
-        if (empty($this->redis)) {
-            throw new Exception('Redis undefined');
-        }
-        
-        return $this->redis;
-    }
+    use Manager\RedisManagerTrait;
     
     /**
      * Set data for ID and keep it for X minutes

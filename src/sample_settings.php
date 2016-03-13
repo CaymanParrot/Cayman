@@ -49,9 +49,12 @@ return [
         
         'cache' => [
             'default' => [
-                'factory'  => '\\Cayman\\Manager\\CacheManager\\Redis::newManager',
+                'factory'  => '\\Cayman\\Manager\\CacheManager\\RedisCache::newManager',
                 'settings' => [
                     'default_life_time' => 300, // seconds
+                    'managers' => [
+                        'redis' => 'default',
+                    ],
                 ],
             ],
         ],
@@ -59,6 +62,11 @@ return [
         'db' => [
             'default' => [
                 'factory'  => '\\Cayman\\Manager\\DbManager\\PostgreSql::newManager',
+                'settings' => [
+                    'managers' => [
+                        'pdo' => 'default',
+                    ]
+                ]
             ],
         ],
         
