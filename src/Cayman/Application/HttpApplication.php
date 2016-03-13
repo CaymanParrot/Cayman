@@ -52,6 +52,12 @@ class HttpApplication extends Application
                 $contextId = $matches['integer'];
                 break;
             }
+            // custom /service/action
+            if ($matches   = $this->matchServiceAction($uri)){
+                $command   = $matches['service'];
+                $action    = $matches['action'];
+                break;
+            }
             
             switch ($method) {
                 case 'get':
@@ -241,6 +247,22 @@ class HttpApplication extends Application
         $result  = null;
         $matches = [];        
         $pattern = sprintf('@^/%s/%s$@', self::PATTERN_MODULE, self::PATTERN_SERVICE);
+        if (preg_match($pattern, $uri, $matches)) {
+            $result = $matches;
+        }
+        return $result;
+    }
+    
+    /**
+     * Match /Service/Action
+     * @param string $uri
+     * @return array | null
+     */
+    private function matchServiceAction($uri)
+    {
+        $result  = null;
+        $matches = [];
+        $pattern = sprintf('@^/%s/%s$@', self::PATTERN_SERVICE, self::PATTERN_ACTION);
         if (preg_match($pattern, $uri, $matches)) {
             $result = $matches;
         }
