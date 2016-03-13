@@ -31,9 +31,9 @@ class HttpApplication extends Application
         $api_prefix = $this->getSettings()->application->api_prefix ?: '';
         
         $method  = strtolower($serverData['REQUEST_METHOD']);// e.g. 'GET'
-        $uri     = strtolower($serverData['REQUEST_URI']);   // e.g. '/api/v1/account/user/search'
+        $uri     = strtolower($serverData['REQUEST_URI']);   // e.g. '/api/v1/account/user/index'
         if ($uri == '/') {
-            $uri = '/index/search';
+            $uri = '/index/index';
         }
         $uri = str_replace($api_prefix, '', $uri, $count = 1);
         
@@ -81,10 +81,10 @@ class HttpApplication extends Application
                         $action  = $matches['action'];
                         break;
                     }
-                    // get custom /module/service search
+                    // get custom /module/service index
                     if ($matches = $this->matchModuleService($uri)){
                         $command = $matches['module'] . '/' . $matches['service'];
-                        $action  = 'search';
+                        $action  = 'index';
                         break;
                     }
                     throw new Exception('Invalid get request');
