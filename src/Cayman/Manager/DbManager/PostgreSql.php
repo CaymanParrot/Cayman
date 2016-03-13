@@ -63,9 +63,8 @@ class PostgreSql extends Manager implements DbManager
             $statement = $this->getPdo()->prepare($sql);
             $statement->execute($params);
         }
-        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
         
-        return $rows;
+        return $statement;
     }
     
     /**
