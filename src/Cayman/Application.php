@@ -247,7 +247,7 @@ abstract class Application
         
         $service = $this->loadService($serviceAlias);
         if (! method_exists($service, $actionName)) {
-            throw new Exception('Invalid service call');
+            throw new Exception('Invalid service call: ' . $actionName);
         }
         $serviceClassName  = $this->getServiceClassName($serviceAlias);
         $serviceInputClass = $serviceClassName . '\\' . ucfirst($actionName) . '\\Input';
