@@ -26,7 +26,9 @@ class RedisFactory
         $servers = $settings->servers;
         
         $redis = new \Redis();
-        $redis->connect();
+        //TODO: initialize Redis
+        //$redis->connect();
+        
         $app->setRedis($redis, $id);
         
         return $redis;

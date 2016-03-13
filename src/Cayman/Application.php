@@ -24,8 +24,8 @@ use Manager\ReleaseManager;
 /**
  * Abstract class for Application
  * 
- * @method \PDO             getPdo($id = 'default')
- * @method \Redis           getRedis($id = 'default')
+ * @method \PDO             getPdoManager($id = 'default')
+ * @method \Redis           getRedisManager($id = 'default')
  * 
  * @method AssetManager     getAssetManager($id = 'default')
  * @method CacheManager     getCacheManager($id = 'default')
@@ -114,9 +114,9 @@ abstract class Application
         $settings   = new Settings($settingArr);
         $params     = [$this, $settings, $id];
         $manager    = call_user_func_array($factory, $params);// run manager factory * * *
-        if (!($manager instanceof Manager)) {
-            throw new Exception('Invalid manager implementation: ' . $typeOriginal);
-        }
+        //if (!($manager instanceof Manager)) {
+        //    throw new Exception('Invalid manager implementation: ' . $typeOriginal);
+        //}
         $this->setManager($manager, $type, $id);
         
         return $manager;

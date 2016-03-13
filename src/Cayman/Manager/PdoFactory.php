@@ -28,6 +28,7 @@ class PdoFactory
         $password = $settings->password;
         
         $pdo = new \PDO($dsn, $username, $password);
+        
         $app->setPdo($pdo, $id);
         
         return $pdo;

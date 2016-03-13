@@ -5,6 +5,8 @@
 
 namespace Cayman\Manager\DbManager;
 
+use Cayman\Application;
+use Cayman\Settings;
 use Cayman\Exception;
 use Cayman\Manager;
 use Cayman\Manager\DbManager;
@@ -17,7 +19,7 @@ use Cayman\Manager\DbManager;
  */
 class PostgreSql extends Manager implements DbManager
 {
-    use Manager\PdoManagerTrait;
+    use Manager\PdoTrait;
     
     /**
      * Begin transaction

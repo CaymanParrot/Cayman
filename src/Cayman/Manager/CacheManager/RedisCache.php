@@ -15,7 +15,7 @@ use Cayman\Manager\CacheManager;
  */
 class RedisCache extends Manager implements CacheManager
 {
-    use Manager\RedisManagerTrait;
+    use Manager\RedisTrait;
     
     /**
      * Set data for ID and keep it for X minutes
