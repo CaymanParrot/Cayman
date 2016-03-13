@@ -129,7 +129,7 @@ abstract class Application
      * @param string  $id
      * @return void
      */
-    function setManager(Manager $manager, $type, $id)
+    function setManager($manager, $type, $id)
     {
         $this->managers[$type][$id] = $manager;
     }
