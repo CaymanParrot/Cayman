@@ -5,8 +5,6 @@
 
 namespace Cayman;
 
-use Cayman\Library\Settings;
-
 /**
  * Class for Manager
  * 
@@ -14,7 +12,7 @@ use Cayman\Library\Settings;
 abstract class Manager
 {
     use ApplicationTrait;
-    use Library\SettingsTrait;
+    use SettingsTrait;
     
     /**
      * Identifier for manager

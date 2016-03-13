@@ -3,7 +3,7 @@
  * File for Settings Trait
  */
 
-namespace Cayman\Library;
+namespace Cayman;
 
 /**
  * Trait for setting and getting Settings

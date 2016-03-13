@@ -5,8 +5,6 @@
 
 namespace Cayman;
 
-use Cayman\Library\Settings;
-
 use Manager\AssetManager;
 use Manager\CacheManager;
 use Manager\DbManager;
@@ -46,7 +44,7 @@ use Manager\ReleaseManager;
  */
 abstract class Application
 {
-    use Library\SettingsTrait;
+    use SettingsTrait;
     
     /**
      * Array of managers loaded

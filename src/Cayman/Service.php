@@ -12,7 +12,7 @@ namespace Cayman;
 abstract class Service
 {
     use ApplicationTrait;
-    use Library\SettingsTrait;
+    use SettingsTrait;
     
     /**
      * Create a new service instance

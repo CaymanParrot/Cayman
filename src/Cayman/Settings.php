@@ -3,8 +3,9 @@
  * File for Settings class
  */
 
-namespace Cayman\Library;
+namespace Cayman;
 
+use Cayman\Library\Container;
 
 /**
  * Class for Settings
