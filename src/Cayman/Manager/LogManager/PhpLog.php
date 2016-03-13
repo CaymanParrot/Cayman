@@ -24,7 +24,7 @@ class PhpLog extends Manager implements LogManager
      */
     function log($message, $level = 'info')
     {
-        $file   = $this->settings->file;
+        $file   = $this->getSettings()->file;
         $result = error_log($message, $fileDestination = 3, $file);
         
         return $result;

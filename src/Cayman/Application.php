@@ -97,7 +97,7 @@ abstract class Application
     {
         $typeOriginal = $type;
         $type = strtolower($type);
-        $managersArr = $this->settings->getEntry('managers');
+        $managersArr = $this->getSettings()->getEntry('managers');
         if (empty($managersArr[$type])) {
             throw new Exception('Manager setting undefined type: ' . $type . ' id: ' . $id);
         }
@@ -161,7 +161,7 @@ abstract class Application
     function loadService($alias)
     {
         $className  = $this->getServiceClassName($alias);
-        $serviceArr = $this->settings->services->getEntry($alias);
+        $serviceArr = $this->getSettings()->services->getEntry($alias);
         $settingArr = isset($serviceArr['settings']) ? $serviceArr['settings'] : [];
         $settings   = new Settings($settingArr);
         $service    = new $className();
@@ -178,7 +178,7 @@ abstract class Application
     
     private function getServiceClassName($alias)
     {
-        $appServices = $this->settings->application->services;
+        $appServices = $this->getSettings()->application->services;
         $namespace   = $appServices->namespace;
         if (empty($namespace)) {
             throw new Exception('Service namespace undefined');
