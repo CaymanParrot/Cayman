@@ -12,8 +12,10 @@ use Manager\CacheManager;
 use Manager\DbManager;
 use Manager\DbSchemaManager;
 use Manager\EmailManager;
+use Manager\EmailManager\Email;
 use Manager\EntityManager;
 use Manager\EventManager;
+use Manager\EventManager\EventContext;
 use Manager\FilterManager;
 use Manager\IdentityManager;
 use Manager\LocaleManager;
@@ -257,6 +259,40 @@ abstract class Application
         $output->setOutput($serviceOutput);
         
         return $output;
+    }
+    
+    /**
+     * Log message using 'default' log manager or another
+     * @param string $message
+     * @param string $level
+     * @param string $managerId
+     * @return bool
+     */
+    function log($message, $level = 'info', $managerId = 'default')
+    {
+        return $this->getLogManager($managerId)->log($message, $level);
+    }
+    
+    /**
+     * Send email
+     * @param Email  $email
+     * @param string $managerId
+     */
+    function emailSend(Email $email, $managerId = 'default')
+    {
+        return $this->getEmailManager($managerId)->emailSend($email);
+    }
+    
+    /**
+     * Broadcast event
+     * @param string       $eventName
+     * @param EventContext $context
+     * @param string       $managerId
+     * @return void
+     */
+    function event($eventName, EventContext $context, $managerId = 'default')
+    {
+        return $this->getEventManager($managerId)->eventBroadcast($eventName, $context);
     }
     
     /**
