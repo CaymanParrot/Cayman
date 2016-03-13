@@ -1,0 +1,27 @@
+{
+    "name": "caymanparrot/cayman",
+    "type": "library",
+    "description": "Foundations for a new simple fast PHP API/Service layer",
+    "keywords": [],
+    "homepage": "https://github.com/CaymanParrot/Cayman.git",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Haci Murat Yaman",
+            "email": "haci@muratyaman.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0"
+    },
+    "autoload": {
+        "psr-4": { "Cayman\\": "src/" }
+    },
+    "target-dir": "src",
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master-dev"
+        }
+    }
+}
