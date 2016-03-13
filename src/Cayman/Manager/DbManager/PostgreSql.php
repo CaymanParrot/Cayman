@@ -27,7 +27,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbBeginTransaction()
     {
-        return $this->getPdoManager()->beginTransaction();
+        return $this->getPdo()->beginTransaction();
     }
     
     /**
@@ -36,7 +36,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbCommitTransaction()
     {
-        return $this->getPdoManager()->commit();
+        return $this->getPdo()->commit();
     }
     
     /**
@@ -45,7 +45,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbRollbackTransaction()
     {
-        return $this->getPdoManager()->rollBack();
+        return $this->getPdo()->rollBack();
     }
     
     /**
@@ -58,9 +58,9 @@ class PostgreSql extends Manager implements DbManager
     function dbStatement($sql, array $params = [])
     {
         if (empty($params)) {
-            $statement = $this->getPdoManager()->query($sql);
+            $statement = $this->getPdo()->query($sql);
         } else {
-            $statement = $this->getPdoManager()->prepare($sql);
+            $statement = $this->getPdo()->prepare($sql);
             $statement->execute($params);
         }
         $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
