@@ -47,33 +47,46 @@ interface DbManager
     function dbFetchAllRows($sql, array $params = []);
 
     /**
-     * Insert record
+     * Execute query and return records as instance of class given
      * 
-     * @param string $table
-     * @param array  $data
+     * @param string $sql
+     * @param array  $params
+     * @param string $className
      * @return int
      */
-    function dbInsert($table, array $data);
+    function dbFetchAllClasses($sql, array $params, $className);
+    
+    /**
+     * Insert record
+     * 
+     * @see http://www.postgresql.org/docs/9.5/static/sql-insert.html
+     * 
+     * @param string $tableName
+     * @param array  $data
+     * @param string $returnFieldNames
+     * @return array
+     */
+    function dbInsert($tableName, array $data = [], $returnFieldNames = '*');
     
     /**
      * Update record
      * 
-     * @param string $table
+     * @param string $tableName
      * @param array  $data
      * @param string $where
-     * @param array  $params
-     * @return int
+     * @param array  $whereParams
+     * @return bool
      */
-    function dbUpdate($table, array $data, $where, array $params = []);
+    function dbUpdate($tableName, array $data, $where, array $whereParams = []);
     
     /**
      * Delete record
      * 
-     * @param string $table
+     * @param string $tableName
      * @param string $where
-     * @param array  $params
-     * @return int
+     * @param array  $whereParams
+     * @return bool
      */
-    function dbDelete($table, $where, array $params = []);
+    function dbDelete($tableName, $where, array $whereParams = []);
     
 }

@@ -83,41 +83,105 @@ class PostgreSql extends Manager implements DbManager
     }
     
     /**
-     * Insert record
+     * Execute query and return records as instance of class given
      * 
-     * @param string $table
-     * @param array  $data
+     * @param string $sql
+     * @param array  $params
+     * @param string $className
      * @return int
      */
-    function dbInsert($table, array $data)
+    function dbFetchAllClasses($sql, array $params, $className)
     {
-        //TODO: implement
+        $statement = $this->dbStatement($sql, $params);
+        $rows      = $statement->fetchAll(\PDO::FETCH_CLASS, $className);
+        
+        return $rows;
+    }
+    
+    /**
+     * Insert record
+     * 
+     * @see http://www.postgresql.org/docs/9.5/static/sql-insert.html
+     * 
+     * @param string $tableName
+     * @param array  $data
+     * @param string $returnFieldNames
+     * @return array
+     */
+    function dbInsert($tableName, array $data = [], $returnFieldNames = '*')
+    {
+        if (empty($data)) {//no data provided, use default values for all fields
+            $sql = 'INSERT INTO ' .$tableName
+                . ' DEFAULT VALUES';
+            $parameters = [];
+        } else {
+            $fields       = array_keys($data);
+            $fieldList    = "'" . implode("', '", $fields) . "'";
+            $placeHolders = str_repeat(',?', count($fields));
+            $placeHolders = substr($placeHolders, 1);// remove the first char ','
+            $parameters   = array_values($data);
+            $sql = 'INSERT INTO ' . $tableName . '(' . $fieldList . ')'
+                . ' VALUES (' . $placeHolders . ')';
+        }
+        
+        if (empty($returnFieldNames)) {
+            $qry = $this->dbStatement($sql, $parameters);
+            $result = [];
+        } else {
+            $sql .= ' RETURNING ' . $returnFieldNames;
+            $qry = $this->dbStatement($sql, $parameters);
+            $result = $qry->fetch(\PDO::FETCH_ASSOC);
+        }
+        
+        return $result;
     }
     
     /**
      * Update record
      * 
-     * @param string $table
+     * @param string $tableName
      * @param array  $data
      * @param string $where
-     * @param array  $params
-     * @return int
+     * @param array  $whereParams
+     * @return bool
      */
-    function dbUpdate($table, array $data, $where, array $params = [])
+    function dbUpdate($tableName, array $data, $where, array $whereParams = [])
     {
-        //TODO: implement
+        $allParameters = [];
+        $fieldAssignments = [];
+        foreach($data as $field => $value) {
+            $fieldAssignments[] = $field . ' = ?';
+            $allParameters[]    = $value;
+        }
+        $fieldAssignmentList = implode(', ', $fieldAssignments);
+        
+        foreach($whereParams as $value) {
+            $allParameters[] = $value;
+        }
+        
+        $sql = 'UPDATE ' . $tableName
+            . ' SET ' . $fieldAssignmentList
+            . ' WHERE ' . $where;
+        
+        $qry = $this->dbStatement($sql, $allParameters);
+        
+        return $qry;
     }
     
     /**
      * Delete record
      * 
-     * @param string $table
+     * @param string $tableName
      * @param string $where
-     * @param array  $params
-     * @return int
+     * @param array  $whereParams
+     * @return bool
      */
-    function dbDelete($table, $where, array $params = [])
+    function dbDelete($tableName, $where, array $whereParams = [])
     {
-        //TODO: implement
+        $sql = 'DELETE ' . $tableName
+            . ' WHERE ' . $where;
+        $qry = $this->dbStatement($sql, $whereParams);
+        
+        return $qry;
     }
 }
