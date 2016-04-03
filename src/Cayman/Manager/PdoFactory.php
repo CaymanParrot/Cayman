@@ -28,6 +28,7 @@ class PdoFactory
         $password = $settings->password;
         
         $pdo = new \PDO($dsn, $username, $password);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         
         $app->setPdo($pdo, $id);
         
