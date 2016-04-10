@@ -93,4 +93,30 @@ interface DbManager
      */
     function dbDelete(InputForDelete $input);
     
+    /**
+     * Get catalog name
+     * @return string
+     */
+    function dbGetCatalogName();
+    
+    /**
+     * Get schema name
+     * @return string
+     */
+    function dbGetSchemaName();
+    
+    /**
+     * Get tables
+     * @return Table[]
+     */
+    function dbGetTables();
+    
+    /**
+     * Create table
+     * 
+     * @param Table $table
+     * @return bool
+     */
+    function dbCreateTable(Table $table);
+    
 }

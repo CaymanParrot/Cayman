@@ -228,19 +228,12 @@ class PostgreSql extends Manager implements DbManager
     }
     
     /**
-     * Schema name
-     * @var string
+     * Get catalog name
+     * @return string
      */
-    protected $schemaName;
-    
-    /**
-     * Set schema name
-     * @param string $name
-     * @return void
-     */
-    function dbSetSchemaName($name)
+    function dbGetCatalogName()
     {
-        $this->schemaName = $name;
+        return $this->getSettings()->getEntry('catalog');
     }
     
     /**
@@ -249,7 +242,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbGetSchemaName()
     {
-        return $this->schemaName;
+        return $this->getSettings()->getEntry('schema');
     }
     
     /**

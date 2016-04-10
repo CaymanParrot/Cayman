@@ -65,8 +65,10 @@ return [
                 'settings' => [
                     'managers' => [
                         'pdo' => 'default',
-                    ]
-                ]
+                    ],
+                    'catalog' => 'dbname',
+                    'schema'  => 'public',
+                ],
             ],
         ],
         
