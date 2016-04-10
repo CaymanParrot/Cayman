@@ -5,11 +5,34 @@
 
 namespace Cayman\Manager;
 
+use Cayman\Manager\DbManager\InputForInsert;
+use Cayman\Manager\DbManager\OutputForInsert;
+
+use Cayman\Manager\DbManager\InputForUpdate;
+use Cayman\Manager\DbManager\OutputForUpdate;
+
+use Cayman\Manager\DbManager\InputForDelete;
+use Cayman\Manager\DbManager\OutputForDelete;
+
+use Cayman\Manager\DbManager\InputForSelect;
+use Cayman\Manager\DbManager\OutputForSelect;
+
+use Cayman\Manager\DbManager\InputForStatement;
+use Cayman\Manager\DbManager\OutputForStatement;
+
 /**
  * Interface for Database Manager
  */
 interface DbManager
 {
+    
+    /**
+     * Delimit name e.g. table name, field name, etc.
+     * @param string $name
+     * @return string
+     */
+    function dbDelimit($name);
+    
     /**
      * Begin transaction
      * @return bool
@@ -31,62 +54,43 @@ interface DbManager
     /**
      * Execute query and return statement object
      * 
-     * @param string $sql
-     * @param array  $params
-     * @return \PDOStatement
+     * @param InputForStatement $input
+     * @return OutputForStatement
      */
-    function dbStatement($sql, array $params = []);
-    
-    /**
-     * Execute query and return records
-     * 
-     * @param string $sql
-     * @param array  $params
-     * @return int
-     */
-    function dbFetchAllRows($sql, array $params = []);
+    function dbStatement(InputForStatement $input);
 
     /**
      * Execute query and return records as instance of class given
      * 
-     * @param string $sql
-     * @param array  $params
-     * @param string $className
-     * @return int
+     * @param InputForSelect $input
+     * @return OutputForSelect
      */
-    function dbFetchAllClasses($sql, array $params, $className);
+    function dbSelect(InputForSelect $input);
     
     /**
      * Insert record
      * 
      * @see http://www.postgresql.org/docs/9.5/static/sql-insert.html
      * 
-     * @param string $tableName
-     * @param array  $data
-     * @param string $returnFieldNames
-     * @return array
+     * @param InputForInsert $input
+     * @return OutputForInsert
      */
-    function dbInsert($tableName, array $data = [], $returnFieldNames = '*');
+    function dbInsert(InputForInsert $input);
     
     /**
      * Update record
      * 
-     * @param string $tableName
-     * @param array  $data
-     * @param string $where
-     * @param array  $whereParams
-     * @return bool
+     * @param InputForUpdate $input
+     * @return OutputForUpdate
      */
-    function dbUpdate($tableName, array $data, $where, array $whereParams = []);
+    function dbUpdate(InputForUpdate $input);
     
     /**
      * Delete record
      * 
-     * @param string $tableName
-     * @param string $where
-     * @param array  $whereParams
-     * @return bool
+     * @param InputForDelete $input
+     * @return OutputForDelete
      */
-    function dbDelete($tableName, $where, array $whereParams = []);
+    function dbDelete(InputForDelete $input);
     
 }

@@ -11,6 +11,21 @@ use Cayman\Exception;
 use Cayman\Manager;
 use Cayman\Manager\DbManager;
 
+use Cayman\Manager\DbManager\InputForInsert;
+use Cayman\Manager\DbManager\OutputForInsert;
+
+use Cayman\Manager\DbManager\InputForUpdate;
+use Cayman\Manager\DbManager\OutputForUpdate;
+
+use Cayman\Manager\DbManager\InputForDelete;
+use Cayman\Manager\DbManager\OutputForDelete;
+
+use Cayman\Manager\DbManager\InputForSelect;
+use Cayman\Manager\DbManager\OutputForSelect;
+
+use Cayman\Manager\DbManager\InputForStatement;
+use Cayman\Manager\DbManager\OutputForStatement;
+
 /**
  * Class for PostgreSQL Database Manager
  * 
@@ -20,6 +35,18 @@ use Cayman\Manager\DbManager;
 class PostgreSql extends Manager implements DbManager
 {
     use Manager\PdoTrait;
+    
+    const DELIMITER = '"';
+    
+    /**
+     * Delimit name e.g. table name, field name, etc.
+     * @param string $name
+     * @return string
+     */
+    function dbDelimit($name)
+    {
+        return static::DELIMITER . $name . static::DELIMITER;
+    }
     
     /**
      * Begin transaction
@@ -51,51 +78,51 @@ class PostgreSql extends Manager implements DbManager
     /**
      * Execute query and return statement object
      * 
-     * @param string $sql
-     * @param array  $params
-     * @return array
+     * @param InputForStatement $input
+     * @return OutputForStatement
      */
-    function dbStatement($sql, array $params = [])
+    function dbStatement(InputForStatement $input)
     {
-        if (empty($params)) {
-            $statement = $this->getPdo()->query($sql);
+        $output = new OutputForStatement();
+        
+        $pdo = $this->getPdo();
+        if (empty($input->parameters)) {
+            $statement      = $pdo->query($input->sql);
         } else {
-            $statement = $this->getPdo()->prepare($sql);
-            $statement->execute($params);
+            $statement      = $pdo->prepare($input->sql);
+            $output->result = $statement->execute($input->parameters);
         }
+        $output->result    = true;
+        $output->statement = $statement;
+        $output->rowCount  = $statement->rowCount();
         
-        return $statement;
-    }
-    
-    /**
-     * Execute query and return records
-     * 
-     * @param string $sql
-     * @param array  $params
-     * @return int
-     */
-    function dbFetchAllRows($sql, array $params = [])
-    {
-        $statement = $this->dbStatement($sql, $params);
-        $rows      = $statement->fetchAll(\PDO::FETCH_ASSOC);
-        
-        return $rows;
+        return $output;
     }
     
     /**
      * Execute query and return records as instance of class given
      * 
-     * @param string $sql
-     * @param array  $params
-     * @param string $className
-     * @return int
+     * @param InputForSelect $input
+     * @return OutputForSelect
      */
-    function dbFetchAllClasses($sql, array $params, $className)
+    function dbSelect(InputForSelect $input)
     {
-        $statement = $this->dbStatement($sql, $params);
-        $rows      = $statement->fetchAll(\PDO::FETCH_CLASS, $className);
+        $output     = new OutputForSelect();
+        $stmtInput  = new InputForStatement();
+        $stmtInput->sql        = $input->sql;
+        $stmtInput->parameters = $input->parameters;
         
-        return $rows;
+        $stmtOutput = $this->dbStatement($stmtInput);
+        if ($input->className) {
+            $output->rows = $stmtOutput->fetchObjects($input->className);
+        } else {
+            $output->rows = $stmtOutput->fetchAssocArrays();
+        }
+        
+        $output->result   = true;
+        $output->rowCount = $stmtOutput->rowCount;
+        
+        return $output;
     }
     
     /**
@@ -103,85 +130,100 @@ class PostgreSql extends Manager implements DbManager
      * 
      * @see http://www.postgresql.org/docs/9.5/static/sql-insert.html
      * 
-     * @param string $tableName
-     * @param array  $data
-     * @param string $returnFieldNames
-     * @return array
+     * @param InputForInsert $input
+     * @return OutputForInsert
      */
-    function dbInsert($tableName, array $data = [], $returnFieldNames = '*')
+    function dbInsert(InputForInsert $input)
     {
-        if (empty($data)) {//no data provided, use default values for all fields
-            $sql = 'INSERT INTO ' .$tableName
-                . ' DEFAULT VALUES';
-            $parameters = [];
+        $output    = new OutputForInsert();
+        $stmtInput = new InputForStatement();
+        
+        if (empty($input->data)) {//no data provided, use default values for all fields
+            $valueList = 'DEFAULT VALUES';
         } else {
-            $fields       = array_keys($data);
-            $fieldList    = "'" . implode("', '", $fields) . "'";
-            $placeHolders = str_repeat(',?', count($fields));
-            $placeHolders = substr($placeHolders, 1);// remove the first char ','
-            $parameters   = array_values($data);
-            $sql = 'INSERT INTO ' . $tableName . '(' . $fieldList . ')'
-                . ' VALUES (' . $placeHolders . ')';
+            $fieldNames   = [];
+            $placeHolders = [];
+            foreach($input->data as $field => $value) {
+                $fieldNames[] = $this->dbDelimit($field);
+                if ($value instanceof Manager\DbExpression) {
+                    $placeHolders[] = $value->value;
+                } else {
+                    $placeHolders[] = '?';
+                    $stmtInput->parameters[] = $value;
+                }
+            }
+            $fieldNameList = '(' . implode(', ', $fieldNames) . ')';
+            $valueList = 'VALUES (' . implode(', ', $placeHolders) . ')';
         }
         
-        if (empty($returnFieldNames)) {
-            $qry = $this->dbStatement($sql, $parameters);
-            $result = [];
-        } else {
-            $sql .= ' RETURNING ' . $returnFieldNames;
-            $qry = $this->dbStatement($sql, $parameters);
-            $result = $qry->fetch(\PDO::FETCH_ASSOC);
-        }
+        $stmtInput->sql = 'INSERT INTO ' . $this->dbDelimit($input->tableName)
+            . ' ' . $fieldNameList
+            . ' ' . $valueList
+            . ' RETURNING ' . $input->returnFieldNames;
+        $stmt = $this->dbStatement($stmtInput);
+        $output->result   = true;
+        $output->rowCount = $stmt->rowCount;
+        $output->rows     = $stmt->fetchAll($input->className);
         
-        return $result;
+        return $output;
     }
     
     /**
      * Update record
      * 
-     * @param string $tableName
-     * @param array  $data
-     * @param string $where
-     * @param array  $whereParams
-     * @return bool
+     * @param InputForUpdate $input
+     * @return OutputForUpdate
      */
-    function dbUpdate($tableName, array $data, $where, array $whereParams = [])
+    function dbUpdate(InputForUpdate $input)
     {
-        $allParameters = [];
+        $output    = new OutputForUpdate();
+        $stmtInput = new InputForStatement();
+        
         $fieldAssignments = [];
-        foreach($data as $field => $value) {
-            $fieldAssignments[] = $field . ' = ?';
-            $allParameters[]    = $value;
+        foreach($input->data as $field => $value) {
+            $fieldName = $this->dbDelimit($field);
+            if ($value instanceof Manager\DbExpression) {
+                $fieldAssignments[] = $fieldName . ' = ' . $value->value;
+            } else {
+                $fieldAssignments[] = $fieldName . ' = ?';
+                $stmtInput->parameters[] = $value;
+            }
         }
-        $fieldAssignmentList = implode(', ', $fieldAssignments);
         
-        foreach($whereParams as $value) {
-            $allParameters[] = $value;
+        foreach($input->whereParams as $value) {
+            $stmtInput->parameters[] = $value;
         }
         
-        $sql = 'UPDATE ' . $tableName
-            . ' SET ' . $fieldAssignmentList
-            . ' WHERE ' . $where;
+        $stmtInput->sql = 'UPDATE ' . $this->dbDelimit($input->tableName)
+            . ' SET ' . implode(', ', $fieldAssignments)
+            . ' WHERE ' . $input->where
+            . ' RETURNING ' . $input->returnFieldNames;
         
-        $qry = $this->dbStatement($sql, $allParameters);
+        $stmt = $this->dbStatement($stmtInput);
+        $output->result   = true;
+        $output->rowCount = $stmt->rowCount;
+        $output->rows     = $stmt->fetchAll($input->className);
         
-        return $qry;
+        return $output;
     }
     
     /**
      * Delete record
      * 
-     * @param string $tableName
-     * @param string $where
-     * @param array  $whereParams
-     * @return bool
+     * @param InputForDelete $input
+     * @return OutputForDelete
      */
-    function dbDelete($tableName, $where, array $whereParams = [])
+    function dbDelete(InputForDelete $input)
     {
-        $sql = 'DELETE ' . $tableName
-            . ' WHERE ' . $where;
-        $qry = $this->dbStatement($sql, $whereParams);
+        $output    = new OutputForDelete();
+        $stmtInput = new InputForStatement();
+        $stmtInput->sql = 'DELETE ' . $this->dbDelimit($input->tableName)
+            . ' WHERE ' . $input->where;
+        $stmtInput->parameters = $input->whereParameters;
+        $stmtOutput = $this->dbStatement($stmtInput);
+        $output->result   = $stmtOutput->result;
+        $output->rowCount = $stmtOutput->rowCount;
         
-        return $qry;
+        return $output;
     }
 }
