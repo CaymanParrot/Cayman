@@ -162,7 +162,7 @@ class HttpApplication extends Application
      * @param string $uri
      * @return array | null
      */
-    private function matchModuleServiceActionUuid($uri)
+    protected function matchModuleServiceActionUuid($uri)
     {
         $result  = null;
         $matches = [];
@@ -178,7 +178,7 @@ class HttpApplication extends Application
      * @param string $uri
      * @return array | null
      */
-    private function matchModuleServiceUuid($uri)
+    protected function matchModuleServiceUuid($uri)
     {
         $result  = null;
         $matches = [];
@@ -194,7 +194,7 @@ class HttpApplication extends Application
      * @param string $uri
      * @return array | null
      */
-    private function matchModuleServiceAction($uri)
+    protected function matchModuleServiceAction($uri)
     {
         $result  = null;
         $matches = [];
@@ -210,7 +210,7 @@ class HttpApplication extends Application
      * @param string $uri
      * @return array | null
      */
-    private function matchModuleServiceActionInt($uri)
+    protected function matchModuleServiceActionInt($uri)
     {
         $result  = null;
         $matches = [];        
@@ -226,7 +226,7 @@ class HttpApplication extends Application
      * @param string $uri
      * @return array | null
      */
-    private function matchModuleServiceInt($uri)
+    protected function matchModuleServiceInt($uri)
     {
         $result  = null;
         $matches = [];        
@@ -242,7 +242,7 @@ class HttpApplication extends Application
      * @param string $uri
      * @return array | null
      */
-    private function matchModuleService($uri)
+    protected function matchModuleService($uri)
     {
         $result  = null;
         $matches = [];        
@@ -258,7 +258,7 @@ class HttpApplication extends Application
      * @param string $uri
      * @return array | null
      */
-    private function matchServiceAction($uri)
+    protected function matchServiceAction($uri)
     {
         $result  = null;
         $matches = [];

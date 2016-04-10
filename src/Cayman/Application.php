@@ -59,6 +59,15 @@ abstract class Application
     private $services = [];
     
     /**
+     * Override to do special operations
+     * @return void
+     */
+    function afterNewSettings()
+    {
+        //do something
+    }
+    
+    /**
      * Magic call handler
      * @param string $name
      * @param array  $arguments

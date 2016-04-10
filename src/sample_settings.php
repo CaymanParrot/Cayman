@@ -99,7 +99,145 @@ return [
             'default' => [
                 'factory'  => '\\Cayman\\Manager\\EventManager\\SimpleEventManager::newManager',
                 'settings' => [
+                    'events' => [
+                        // [before|after]:manager/[manager-type]/[manager-alias|*]/[event-name|*]
+                        '*' => [
+                            '\\My\\Application\\EventListener\\AllEvents::eventListen',
+                        ],
+                        
+                        'before:*' => [
+                            
+                        ],
+                        'after:*' => [
+                            
+                        ],
+                        
+                        'before:service/*' => [
+                            
+                        ],
+                        'after:service/*' => [
+                            
+                        ],
+                        
+                        'before:manager/*' => [
+                            
+                        ],
+                        'after:manager/*' => [
+                            
+                        ],
+                        
+                        'before:manager/db/default/*' => [
+                            
+                        ],
+                        'after:manager/db/default/*' => [
+                            
+                        ],
+                        
+                        'before:manager/db/default/connect' => [
+                            
+                        ],
+                        'after:manager/db/default/connect' => [
+                            
+                        ],
+                        
+                        'before:manager/asset/*' => [
+                            '\\My\\Application\\EventListener\\AssetManagerEvents::eventListen',
+                        ],
+                        'after:manager/asset/*' => [
+                            '\\My\\Application\\EventListener\\AssetManagerEvents::eventListen',
+                        ],
 
+                        'before:manager/cache/*' => [
+                            '\\My\\Application\\EventListener\\CacheManagerEvents::eventListen',
+                        ],
+                        'after:manager/cache/*' => [
+                            '\\My\\Application\\EventListener\\CacheManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/db/*' => [
+                            '\\My\\Application\\EventListener\\DbManagerEvents::eventListen',
+                        ],
+                        'after:manager/db/*' => [
+                            '\\My\\Application\\EventListener\\DbManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/dbschema/*' => [
+                            '\\My\\Application\\EventListener\\DbSchemaManagerEvents::eventListen',
+                        ],
+                        'after:manager/dbschema/*' => [
+                            '\\My\\Application\\EventListener\\DbSchemaManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/email/*' => [
+                            '\\My\\Application\\EventListener\\EmailManagerEvents::eventListen',
+                        ],
+                        'after:manager/email/*' => [
+                            '\\My\\Application\\EventListener\\EmailManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/entity/*' => [
+                            '\\My\\Application\\EventListener\\EntityManagerEvents::eventListen',
+                        ],
+                        'after:manager/entity/*' => [
+                            '\\My\\Application\\EventListener\\EntityManagerEvents::eventListen',
+                        ],
+
+//                        'before:manager/event/*' => [
+//                            '\\My\\Application\\EventListener\\EventManagerEvents::eventListen',
+//                        ],
+//                        'after:manager/event/*' => [
+//                            '\\My\\Application\\EventListener\\EventManagerEvents::eventListen',
+//                        ],
+
+                        'before:manager/filter/*' => [
+                            '\\My\\Application\\EventListener\\FilterManagerEvents::eventListen',
+                        ],
+                        'after:manager/filter/*' => [
+                            '\\My\\Application\\EventListener\\FilterManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/identity/*' => [
+                            '\\My\\Application\\EventListener\\IdentityManagerEvents::eventListen',
+                        ],
+                        'after:manager/identity/*' => [
+                            '\\My\\Application\\EventListener\\IdentityManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/locale/*' => [
+                            '\\My\\Application\\EventListener\\LocaleManagerEvents::eventListen',
+                        ],
+                        'after:manager/locale/*' => [
+                            '\\My\\Application\\EventListener\\LocaleManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/log/*' => [
+                            '\\My\\Application\\EventListener\\LogManagerEvents::eventListen',
+                        ],
+                        'after:manager/log/*' => [
+                            '\\My\\Application\\EventListener\\LogManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/pdo/*' => [
+                            '\\My\\Application\\EventListener\\PdoManagerEvents::eventListen',
+                        ],
+                        'after:manager/pdo/*' => [
+                            '\\My\\Application\\EventListener\\PdoManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/redis/*' => [
+                            '\\My\\Application\\EventListener\\RedisManagerEvents::eventListen',
+                        ],
+                        'after:manager/redis/*' => [
+                            '\\My\\Application\\EventListener\\RedisManagerEvents::eventListen',
+                        ],
+
+                        'before:manager/queue/*' => [
+                            '\\My\\Application\\EventListener\\QueueManagerEvents::eventListen',
+                        ],
+                        'after:manager/queue/*' => [
+                            '\\My\\Application\\EventListener\\QueueManagerEvents::eventListen',
+                        ],
+                    ]
                 ],
             ],
         ],
@@ -174,4 +312,6 @@ return [
         ],
         
     ],
+    
+    
 ];

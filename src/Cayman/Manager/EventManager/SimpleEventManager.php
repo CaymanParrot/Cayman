@@ -22,6 +22,19 @@ class SimpleEventManager extends Manager implements EventManager
     private $events = [];
     
     /**
+     * Override to do special operations
+     * @return void
+     */
+    function afterNewSettings()
+    {
+        $events = $this->getSettings()->getEntry('events');
+        if (! empty($events) && is_array($events)) {
+            $this->events = $events;
+        }
+    }
+
+    
+    /**
      * Listen to event
      * @param string        $eventName
      * @param EventListener $listener
@@ -65,7 +78,11 @@ class SimpleEventManager extends Manager implements EventManager
             throw new Exception('Event undefined');
         }
         foreach($this->events[$eventName] as $listener) {
-            $stop = $listener->eventListen($eventName, $context);
+            if ($listener instanceof EventListener) {
+                $stop = $listener->eventListen($eventName, $context);
+            } elseif(is_callable($listener)) {
+                $stop = call_user_func_array($listener, [$eventName, $context]);
+            }
             if ($stop) {
                 break;
             }

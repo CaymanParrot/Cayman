@@ -25,6 +25,16 @@ trait SettingsTrait
     function setSettings(Settings $settings)
     {
         $this->settings = $settings;
+        $this->afterNewSettings();
+    }
+    
+    /**
+     * Override to do special operations
+     * @return void
+     */
+    function afterNewSettings()
+    {
+        //do something
     }
     
     /**
