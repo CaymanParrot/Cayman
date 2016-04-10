@@ -70,12 +70,6 @@ return [
             ],
         ],
         
-        'dbschema' => [
-            'default' => [
-                'factory'  => '\\Cayman\\Manager\\DbSchemaManager\\PostgreSql::newManager',
-            ],
-        ],
-        
         'email' => [
             'default' => [
                 'factory'  => '\\Cayman\\Manager\\EmailManager\\PhpMail::newManager',
@@ -159,13 +153,6 @@ return [
                         ],
                         'after:manager/db/*' => [
                             '\\My\\Application\\EventListener\\DbManagerEvents::eventListen',
-                        ],
-
-                        'before:manager/dbschema/*' => [
-                            '\\My\\Application\\EventListener\\DbSchemaManagerEvents::eventListen',
-                        ],
-                        'after:manager/dbschema/*' => [
-                            '\\My\\Application\\EventListener\\DbSchemaManagerEvents::eventListen',
                         ],
 
                         'before:manager/email/*' => [

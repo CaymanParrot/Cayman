@@ -4,7 +4,7 @@
  * File for Table Constraint class
  */
 
-namespace Cayman\Manager\DbSchemaManager;
+namespace Cayman\Manager\DbManager;
 
 /**
  * Class for Table Constraint

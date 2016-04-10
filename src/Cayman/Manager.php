@@ -20,7 +20,6 @@ abstract class Manager
     use Manager\AssetManagerTrait;
     use Manager\CacheManagerTrait;
     use Manager\DbManagerTrait;
-    use Manager\DbSchemaManagerTrait;
     use Manager\EmailManagerTrait;
     use Manager\EntityManagerTrait;
     use Manager\EventManagerTrait;

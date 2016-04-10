@@ -8,7 +8,6 @@ namespace Cayman;
 use Manager\AssetManager;
 use Manager\CacheManager;
 use Manager\DbManager;
-use Manager\DbSchemaManager;
 use Manager\EmailManager;
 use Manager\EmailManager\Email;
 use Manager\EntityManager;
@@ -30,7 +29,6 @@ use Manager\ReleaseManager;
  * @method AssetManager     getAssetManager($id = 'default')
  * @method CacheManager     getCacheManager($id = 'default')
  * @method DbManager        getDbManager($id = 'default')
- * @method DbSchemaManager  getDbSchemaManager($id = 'default')
  * @method EmailManager     getEmailManager($id = 'default')
  * @method EntityManager    getEntityManager($id = 'default')
  * @method EventManager     getEventManager($id = 'default')

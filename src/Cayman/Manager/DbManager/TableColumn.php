@@ -4,7 +4,7 @@
  * File for Column class
  */
 
-namespace Cayman\Manager\DbSchemaManager;
+namespace Cayman\Manager\DbManager;
 
 /**
  * Class for Column
