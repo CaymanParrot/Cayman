@@ -6,6 +6,8 @@
 
 namespace Cayman\Manager\DbManager;
 
+use Cayman\Manager\DbManager;
+
 /**
  * Class for Table definition
  *
@@ -19,7 +21,7 @@ namespace Cayman\Manager\DbManager;
  * </pre>
  * 
  */
-class Table
+class Table extends View
 {
     /**
      * Catalog name
@@ -95,13 +97,13 @@ class Table
     
     /**
      * Columns
-     * @var TableColumn[]
+     * @var Column[]
      */
     protected $columns = [];
     
     /**
      * Constraints
-     * @var TableConstraint[]
+     * @var Constraint[]
      */
     protected $constraints = [];
     
@@ -110,4 +112,35 @@ class Table
     protected $indexes = [];
     
     protected $foreignKeys = [];
+    
+    /**
+     * Get name e.g. 'tbl_user'
+     * @return string
+     */
+    function getName()
+    {
+        return $this->table_name;
+    }
+    
+    /**
+     * Get schema name e.g. 'public'
+     * @return string
+     */
+    function getSchemaName()
+    {
+        return $this->table_schema;
+    }
+    
+    /**
+     * Get schema name e.g. 'SELECT * FROM "public"."tbl_user"'
+     * @return string
+     */
+    function getSql()
+    {
+        return sprintf(
+            'SELECT * FROM "%s"."%s"',
+            $this->getSchemaName(),
+            $this->getName()
+        );
+    }
 }
