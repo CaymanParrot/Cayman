@@ -5,6 +5,10 @@
 
 namespace Cayman\Manager;
 
+use Cayman\Manager\DbManager\Table;
+use Cayman\Manager\DbManager\TableColumn;
+use Cayman\Manager\DbManager\TableConstraint;
+
 use Cayman\Manager\DbManager\InputForInsert;
 use Cayman\Manager\DbManager\OutputForInsert;
 
