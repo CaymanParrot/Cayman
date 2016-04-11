@@ -130,17 +130,4 @@ class Table extends View
     {
         return $this->table_schema;
     }
-    
-    /**
-     * Get schema name e.g. 'SELECT * FROM "public"."tbl_user"'
-     * @return string
-     */
-    function getSql()
-    {
-        return sprintf(
-            'SELECT * FROM "%s"."%s"',
-            $this->getSchemaName(),
-            $this->getName()
-        );
-    }
 }

@@ -21,13 +21,23 @@ abstract class View
      * Get schema name e.g. 'public'
      * @return string
      */
-    abstract function getSchemaName();
+    function getSchemaName()
+    {
+        return 'public';
+    }
     
     /**
-     * Get SQL statement
+     * Get schema name e.g. 'SELECT * FROM "public"."tbl_user"'
      * @return string
      */
-    abstract function getSql();
+    function getSql()
+    {
+        return sprintf(
+            'SELECT * FROM "%s"."%s"',
+            $this->getSchemaName(),
+            $this->getName()
+        );
+    }
     
     /**
      * Get parameters
@@ -45,6 +55,13 @@ abstract class View
      */
     function getClassName()
     {
-        return null;
+        $result = null;
+        
+        $class = get_class($this);
+        if (substr($class, -5) == 'Table') {
+            $result = substr($class, 0, -5) . 'Row';
+        }
+        
+        return $result;
     }
 }
