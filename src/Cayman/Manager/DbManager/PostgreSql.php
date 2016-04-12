@@ -36,6 +36,15 @@ class PostgreSql extends Manager implements DbManager
 {
     use Manager\PdoTrait;
     
+    /**
+     * Table array (to be used as in-class cache)
+     * @var Table[]
+     */
+    protected $tables;
+    
+    /**
+     * Delimiter for PostgreSQL in order to wrap identifiers to avoid clash with keywords etc.
+     */
     const DELIMITER = '"';
     
     /**
@@ -251,18 +260,80 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbGetTables()
     {
-        $sql = <<<SQL
+        if (! empty($this->tables)) {
+            $input = new InputForSelect();
+            $input->className = Table::class;
+            $input->sql = <<<SQL
 select *
 from information_schema.tables t
 where t.table_schema = ?
 --  and t.table_catalog = '[dbname]'
 ;
 SQL;
-        $params = [
-            $this->dbGetSchemaName(),
-        ];
-        $tables = $this->getDbManager()->dbFetchAllClasses($sql, $params, Table::class);
-        return $tables;
+            $input->parameters = [
+                $this->dbGetSchemaName(),
+            ];
+            $output = $this->getDbManager()->dbSelect($input);
+            $this->tables = [];
+            foreach($output->rows as $table) {
+                if ($table instanceof Table) {
+                    $key = $table->getFullName();
+                    $this->tables[$key] = $table;
+                }
+            }
+        }
+        
+        return $this->tables;
+    }
+    
+    /**
+     * Get table info
+     * @param Table $table
+     * @return Table
+     */
+    function dbGetTable(Table $table)
+    {
+        $key    = $table->getFullName();
+        $tables = $this->dbGetTables();//load in-class cache
+        if (isset($tables[$key])) {
+            $baseTable = $tables[$key];
+            $table->copyTable($baseTable);
+        }
+        
+        return $table;
+    }
+    
+    /**
+     * Get table columns
+     * @param Table $table
+     * @return TableColumn[]
+     */
+    function dbGetTableColumns(Table $table)
+    {
+        $columns = $table->getColumns();
+        
+        if (empty($columns)) {
+            $input = new InputForSelect();
+            $input->sql = <<<SQL
+SELECT *
+FROM information_schema.columns c
+WHERE c.table_schema = ?
+  AND c.table_name   = ?
+-- AND c.table_catalog = '[dbname]'
+ORDER BY c.ordinal_position;
+SQL;
+            $input->parameters = [
+                $table->getSchemaName(), $table->getName()
+            ];
+            $output = $this->dbSelect($input);
+            $columns = $output->rows;
+            $table->resetColumns();
+            foreach($columns as $column) {
+                $table->addColumn($column);
+            }
+        }
+        
+        return $columns;
     }
     
     /**
@@ -276,5 +347,6 @@ SQL;
     function dbCreateTable(Table $table)
     {
         //TODO: implement
+        throw new Exception(__METHOD__ . ' not implemented yet');
     }
 }

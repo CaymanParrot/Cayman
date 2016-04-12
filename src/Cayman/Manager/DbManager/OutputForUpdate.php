@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File for output class of update function of db manager
  */

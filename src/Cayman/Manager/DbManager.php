@@ -110,10 +110,24 @@ interface DbManager
     function dbGetSchemaName();
     
     /**
-     * Get tables
+     * Get basic info for tables
      * @return Table[]
      */
     function dbGetTables();
+    
+    /**
+     * Get basic info for table
+     * @param Table $table
+     * @return Table
+     */
+    function dbGetTable(Table $table);
+    
+    /**
+     * Get table columns
+     * @param Table $table
+     * @return TableColumn[]
+     */
+    function dbGetTableColumns(Table $table);
     
     /**
      * Create table

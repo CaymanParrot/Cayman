@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File for output class of select function of db manager
  */

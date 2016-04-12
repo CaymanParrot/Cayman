@@ -12,5 +12,6 @@ namespace Cayman\Manager\DbManager;
  */
 class Row
 {
+    use \Cayman\Library\ObjectHydratorTrait;
     use \Cayman\Library\ObjectDeHydratorTrait;
 }

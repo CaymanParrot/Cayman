@@ -285,4 +285,13 @@ class TableColumn
      * @var bool
      */
     public $is_updatable;
+    
+    /**
+     * Check whether a value for column is required and can be input by user or not
+     * @return bool
+     */
+    function isRequired()
+    {
+        return ! $this->is_nullable && ! $this->is_generated && $this->is_updatable;
+    }
 }

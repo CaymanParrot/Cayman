@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File for output class of delete function of db manager
  */

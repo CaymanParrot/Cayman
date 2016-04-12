@@ -107,8 +107,6 @@ class Table extends View
      */
     protected $constraints = [];
     
-    protected $primaryKey = [];
-    
     protected $indexes = [];
     
     protected $foreignKeys = [];
@@ -129,5 +127,55 @@ class Table extends View
     function getSchemaName()
     {
         return $this->table_schema;
+    }
+    
+    /**
+     * Copy table data into this table
+     * @param Table $sourceTable
+     * @return void
+     */
+    function copyTable(Table $sourceTable)
+    {
+        $data = $sourceTable->toArray();
+        $this->hydrate($data);
+    }
+    
+    /**
+     * Reset columns i.e. empty the array of columns
+     * @return void
+     */
+    function resetColumns()
+    {
+        $this->columns = [];
+    }
+    
+    /**
+     * Add column
+     * @param TableColumn $column
+     * @return void
+     */
+    function addColumn(TableColumn $column)
+    {
+        $name = $column->column_name;
+        $this->columns[$name] = $column;
+    }
+    
+    /**
+     * Get columns
+     * @return TableColumn[]
+     */
+    function getColumns()
+    {
+        return $this->columns;
+    }
+    
+    /**
+     * Get column
+     * @param string $name
+     * @return TableColumn | null
+     */
+    function getColumn($name)
+    {
+        return isset($this->columns[$name]) ? $this->columns[$name] : null;
     }
 }

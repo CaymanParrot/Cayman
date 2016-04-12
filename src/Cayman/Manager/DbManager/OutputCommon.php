@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File for common output class
  */
@@ -12,6 +11,19 @@ namespace Cayman\Manager\DbManager;
  */
 class OutputCommon
 {
+    use \Cayman\Library\ObjectHydratorTrait;
+    
+    /**
+     * Construct
+     * @param array $data
+     */
+    function __construct(array $data = [])
+    {
+        if (! empty($data)) {
+            $this->hydrate($data, $this);
+        }
+    }
+    
     /**
      * Rows returned
      * @var array

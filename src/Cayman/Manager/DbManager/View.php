@@ -11,6 +11,9 @@ namespace Cayman\Manager\DbManager;
  */
 abstract class View
 {
+    use \Cayman\Library\ObjectHydratorTrait;
+    use \Cayman\Library\ObjectDeHydratorTrait;
+    
     /**
      * Get name e.g. 'tbl_user'
      * @return string
@@ -27,16 +30,21 @@ abstract class View
     }
     
     /**
+     * Get fully qualified name e.g. '"public"."tbl_user"'
+     * @return string
+     */
+    function getFullName()
+    {
+        return sprintf('"%s"."%s"', $this->getSchemaName(), $this->getName());
+    }
+    
+    /**
      * Get schema name e.g. 'SELECT * FROM "public"."tbl_user"'
      * @return string
      */
     function getSql()
     {
-        return sprintf(
-            'SELECT * FROM "%s"."%s"',
-            $this->getSchemaName(),
-            $this->getName()
-        );
+        return 'SELECT * FROM ' . $this->getFullName();
     }
     
     /**
@@ -53,7 +61,7 @@ abstract class View
      * Associative arrays will be returned, if class name is not given
      * @return string
      */
-    function getClassName()
+    function getRowClassName()
     {
         $result = null;
         
@@ -64,4 +72,20 @@ abstract class View
         
         return $result;
     }
+    
+    /**
+     * Primary key fields
+     * @var array
+     */
+    protected $primaryKey = [ 'id' ];
+    
+    /**
+     * Get primary key fields
+     * @var array
+     */
+    function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+    
 }

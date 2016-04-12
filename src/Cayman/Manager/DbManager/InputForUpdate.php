@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File for input class of update function of db manager
  */
@@ -10,7 +9,7 @@ namespace Cayman\Manager\DbManager;
  * Class for input of update function of db manager
  *
  */
-class InputForUpdate
+class InputForUpdate extends InputCommon
 {
     /**
      * Table name

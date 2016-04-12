@@ -30,9 +30,17 @@ class PostgreSql extends Manager implements EntityManager
      */
     function entityCreate(View $view, Row $new)
     {
+        $newData = $new->toArray();
+        $notNullData = [];
+        foreach($newData as $key => $value) {
+            if (! is_null($value)) {
+                $notNullData[$key] = $value;
+            }
+        }
+        
         $input = new InputForInsert();
         $input->tableName = $view->getName();
-        $input->data      = $new->toArray();
+        $input->data      = $notNullData;
         $input->className = get_class($new);
         $output = $this->getDbManager()->dbInsert($input);
         $row = isset($output->rows[0]) ? $output->rows[0] : null;
@@ -50,17 +58,26 @@ class PostgreSql extends Manager implements EntityManager
      */
     function entityUpdate(View $view, Row $new, Row $old)
     {
+        $db = $this->getDbManager();
+        
         $newData = $new->toArray();
         $oldData = $old->toArray();
         $changed = array_diff($newData, $oldData);
         
+        $whereArr = [];
+        foreach($view->getPrimaryKey() as $columnName) {
+            $name = $view->getFullName() . '.' . $db->dbDelimit($columnName);
+            $whereArr[] = $name . ' = ?';
+        }
+        $where = '(' . implode(') AND (', $whereArr) . ')';
+        
         $input = new InputForUpdate();
         $input->tableName       = $view->getName();
         $input->data            = $changed;
-        $input->where           = 'id = ?';
+        $input->where           = $where;
         $input->whereParameters = [ $oldData['id'] ];
         $input->className       = get_class($new);
-        $output = $this->getDbManager()->dbUpdate($input);
+        $output = $db->dbUpdate($input);
         $row = isset($output->rows[0]) ? $output->rows[0] : null;
         
         return $row;
@@ -74,11 +91,13 @@ class PostgreSql extends Manager implements EntityManager
      */
     function entityRetrieve(View $view)
     {
+        $db = $this->getDbManager();
+        
         $input = new InputForSelect();
         $input->sql        = $view->getSql();
         $input->parameters = $view->getParameters();
-        $input->className  = $view->getClassName();
-        $output = $this->getDbManager()->dbSelect($input);
+        $input->className  = $view->getRowClassName();
+        $output = $db->dbSelect($input);
         $row = isset($output->rows[0]) ? $output->rows[0] : null;
         
         return $row;
@@ -92,11 +111,13 @@ class PostgreSql extends Manager implements EntityManager
      */
     function entitySelect(View $view)
     {
+        $db = $this->getDbManager();
+        
         $input = new InputForSelect();
         $input->sql        = $view->getSql();
         $input->parameters = $view->getParameters();
-        $input->className  = $view->getClassName();
-        $output = $this->getDbManager()->dbSelect($input);
+        $input->className  = $view->getRowClassName();
+        $output = $db->dbSelect($input);
         $rows = $output->rows;
         
         return $rows;
@@ -111,14 +132,56 @@ class PostgreSql extends Manager implements EntityManager
      */
     function entityDelete(View $view, Row $old)
     {
-        $oldData = $old->toArray();
+        $db = $this->getDbManager();
         
         $input = new InputForDelete();
         $input->tableName       = $view->getName();
-        $input->where           = 'id = ?';
-        $input->whereParameters = [ $oldData['id'] ];
-        $output = $this->getDbManager()->dbDelete($input);
+        $input->where           = $this->getWhereClauseFromPrimaryKey($view, $old);
+        $input->whereParameters = $this->getWhereClauseParamsFromPrimaryKey($view, $old);
+        $output = $db->dbDelete($input);
         
         return $output->rowCount;
+    }
+    
+    /**
+     * Get where clause from primary key
+     * @param View $view
+     * @return string
+     */
+    private function getWhereClauseFromPrimaryKey(View $view, Row $row)
+    {
+        $db = $this->getDbManager();
+        
+        $whereArr = [];
+        foreach($view->getPrimaryKey() as $columnName) {
+            $name = $view->getFullName() . '.' . $db->dbDelimit($columnName);
+            $value = $row->$columnName;
+            if ($value instanceof Manager\DbExpression) {
+                $whereArr[] = $name . ' = ' . $value->value;
+            } else {
+                $whereArr[] = $name . ' = ?';
+            }
+        }
+        $where = '(' . implode(') AND (', $whereArr) . ')';
+        
+        return $where;
+    }
+    
+    /**
+     * Get where clause parameters from primary key
+     * @param View $view
+     * @return array
+     */
+    private function getWhereClauseParamsFromPrimaryKey(View $view, Row $row)
+    {
+        $params = [];
+        foreach($view->getPrimaryKey() as $columnName) {
+            $value = $row->$columnName;
+            if (! ($value instanceof Manager\DbExpression)) {
+                $params[] = $row->$columnName;
+            }
+        }
+        
+        return $params;
     }
 }

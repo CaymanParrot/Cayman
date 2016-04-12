@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File for output class of insert function of db manager
  */
