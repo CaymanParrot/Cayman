@@ -287,11 +287,38 @@ class TableColumn
     public $is_updatable;
     
     /**
+     * Check whether the column is updatable or not
+     * @return bool
+     */
+    function isUpdatable()
+    {
+        return 'YES' == $this->is_updatable;
+    }
+    
+    /**
+     * Check whether the column is nullable or not
+     * @return bool
+     */
+    function isNullable()
+    {
+        return 'YES' == $this->is_nullable;
+    }
+    
+    /**
+     * Check whether the column is generated or not
+     * @return bool
+     */
+    function isGenerated()
+    {
+        return 'NEVER' != $this->is_generated;
+    }
+    
+    /**
      * Check whether a value for column is required and can be input by user or not
      * @return bool
      */
     function isRequired()
     {
-        return ! $this->is_nullable && ! $this->is_generated && $this->is_updatable;
+        return ! $this->isNullable() && ! $this->isGenerated() && $this->isUpdatable();
     }
 }
