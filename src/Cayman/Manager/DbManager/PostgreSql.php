@@ -273,7 +273,7 @@ SQL;
             $input->parameters = [
                 $this->dbGetSchemaName(),
             ];
-            $output = $this->getDbManager()->dbSelect($input);
+            $output = $this->dbSelect($input);
             $this->tables = [];
             foreach($output->rows as $table) {
                 if ($table instanceof Table) {
