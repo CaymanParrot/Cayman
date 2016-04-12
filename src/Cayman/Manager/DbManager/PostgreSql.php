@@ -314,6 +314,7 @@ SQL;
         
         if (empty($columns)) {
             $input = new InputForSelect();
+            $input->className = TableColumn::class;
             $input->sql = <<<SQL
 SELECT *
 FROM information_schema.columns c
