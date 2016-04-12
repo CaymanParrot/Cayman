@@ -260,14 +260,14 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbGetTables()
     {
-        if (! empty($this->tables)) {
+        if (empty($this->tables)) {
             $input = new InputForSelect();
             $input->className = Table::class;
             $input->sql = <<<SQL
-select *
-from information_schema.tables t
-where t.table_schema = ?
---  and t.table_catalog = '[dbname]'
+SELECT *
+FROM information_schema.tables t
+WHERE t.table_schema = ?
+-- AND t.table_catalog = '[dbname]'
 ;
 SQL;
             $input->parameters = [
