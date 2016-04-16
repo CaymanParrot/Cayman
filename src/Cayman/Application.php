@@ -240,12 +240,12 @@ abstract class Application
     
     /**
      * Run the application
-     * @param Input $input
-     * @return Output
+     * @param AppInput $input
+     * @return AppOutput
      */
-    function run(Input $input)
+    function run(AppInput $input)
     {
-        $output = new Output();
+        $output = new AppOutput();
         $output->appendMeta(date('Y-m-d H:i:s'), 'now');
         $output->setInput($input);
         
@@ -261,8 +261,7 @@ abstract class Application
         if (!class_exists($serviceInputClass)) {
             throw new Exception('Uknown service input class: ' . $serviceInputClass);
         }
-        $serviceInput = new $serviceInputClass($input);
-        
+        $serviceInput = new $serviceInputClass($input->data);
         $serviceOutput = $service->$actionName($serviceInput);
         $output->setOutput($serviceOutput);
         

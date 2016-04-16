@@ -9,7 +9,7 @@ namespace Cayman;
  * Interface for Output
  *
  */
-class Output
+class AppOutput
 {
     
     const STATUS_SUCCESS = 'success';

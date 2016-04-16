@@ -13,7 +13,7 @@ namespace Cayman;
  * e.g. Bespoke 'GET /api/ecommerce/order/retrieve?input[id]=1234'
  * e.g. RESTful 'GET /api/ecommerce/orders/1234'
  */
-class Input
+class AppInput
 {
     /**
      * Service name
