@@ -106,15 +106,15 @@ abstract class Application
         $type = strtolower($type);
         $managersArr = $this->getSettings()->getEntry('managers');
         if (empty($managersArr[$type])) {
-            throw new Exception('Manager setting undefined type: ' . $type . ' id: ' . $id);
+            throw new Exception('Manager setting undefined type: ' . $type . ', id: ' . $id);
         }
         if (empty($managersArr[$type][$id])) {
-            throw new Exception('Manager setting undefined type: ' . $type . ' id: ' . $id);
+            throw new Exception('Manager setting undefined type: ' . $type . ', id: ' . $id);
         }
         
         $managerArr  = $managersArr[$type][$id];
         if (empty($managerArr['factory']) or ! is_callable($managerArr['factory'])) {
-            throw new Exception('Manager factory undefined type: ' . $type . ' id: ' . $id);
+            throw new Exception('Manager factory undefined type: ' . $type . ', id: ' . $id);
         }
         $factory    = $managerArr['factory'];
         $settingArr = isset($managerArr['settings']) ? $managerArr['settings'] : [];
@@ -154,7 +154,7 @@ abstract class Application
             $this->loadManager($type, $id);
         }
         if (empty($this->managers[$type][$id])) {
-            throw new Exception('Manager undefined type: ' . $type . ' id: ' . $id);
+            throw new Exception('Manager undefined type: ' . $type . ', id: ' . $id);
         }
         return $this->managers[$type][$id];
     }
@@ -225,7 +225,7 @@ abstract class Application
             $this->loadService($type, $id);
         }
         if (empty($this->services[$type][$id])) {
-            throw new Exception('Service undefined type: ' . $type . ' id: ' . $id);
+            throw new Exception('Service undefined type: ' . $type . ', id: ' . $id);
         }
         return $this->services[$type][$id];
     }
@@ -258,6 +258,9 @@ abstract class Application
         }
         $serviceClassName  = $this->getServiceClassName($serviceAlias);
         $serviceInputClass = $serviceClassName . '\\' . ucfirst($actionName) . '\\Input';
+        if (!class_exists($serviceInputClass)) {
+            throw new Exception('Uknown service input class: ' . $serviceInputClass);
+        }
         $serviceInput = new $serviceInputClass($input);
         
         $serviceOutput = $service->$actionName($serviceInput);
@@ -307,7 +310,7 @@ abstract class Application
      */
     function help(Input $input)
     {
-        
+        //TODO: implement
     }
     
 }
