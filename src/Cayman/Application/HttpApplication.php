@@ -7,8 +7,8 @@ namespace Cayman\Application;
 
 use Cayman\Application;
 use Cayman\Exception;
-use Cayman\Input;
-use Cayman\Output;
+use Cayman\AppInput;
+use Cayman\AppOutput;
 
 /**
  * Class for HTTP Application
@@ -25,7 +25,7 @@ class HttpApplication extends Application
      */
     function loadInput(array $serverData = [], array $inputData = [])
     {
-        $input = new Input();
+        $input = new AppInput();
         $input->setData($inputData);
         
         $api_prefix = $this->getSettings()->application->api_prefix ?: '';
