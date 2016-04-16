@@ -116,11 +116,11 @@ interface DbManager
     function dbGetTables();
     
     /**
-     * Get basic info for table
-     * @param Table $table
+     * Get a new table object
+     * @param string $tableClassName
      * @return Table
      */
-    function dbGetTable(Table $table);
+    function dbGetTable($tableClassName);
     
     /**
      * Get table columns
@@ -137,4 +137,10 @@ interface DbManager
      */
     function dbCreateTable(Table $table);
     
+    /**
+     * Get a new view object
+     * @param string $viewClassname
+     * @return View
+     */
+    function dbGetView($viewClassname);
 }

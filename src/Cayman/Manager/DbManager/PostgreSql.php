@@ -287,12 +287,17 @@ SQL;
     }
     
     /**
-     * Get table info
-     * @param Table $table
+     * Get a new table object
+     * @param string $tableClassName
      * @return Table
      */
-    function dbGetTable(Table $table)
+    function dbGetTable($tableClassName)
     {
+        $table  = new $tableClassName();
+        if (!($table instanceof Table)) {
+            throw new Exception('Invalida table implementation by class: ' . $tableClassName);
+        }
+        $table->setDb($this);
         $key    = $table->getFullName();
         $tables = $this->dbGetTables();//load in-class cache
         if (isset($tables[$key])) {
@@ -349,5 +354,21 @@ SQL;
     {
         //TODO: implement
         throw new Exception(__METHOD__ . ' not implemented yet');
+    }
+    
+    /**
+     * Get a new view object
+     * @param string $viewClassname
+     * @return View
+     */
+    function dbGetView($viewClassname)
+    {
+        $view = new $viewClassname();
+        if (!($view instanceof View)) {
+            throw new Exception('Invalida view implementation by class: ' . $viewClassname);
+        }
+        $view->setDb($this);
+        
+        return $view;
     }
 }
