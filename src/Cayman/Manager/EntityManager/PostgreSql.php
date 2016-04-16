@@ -3,7 +3,7 @@
  * File for PostgreSQL 9.5 Entity Manager
  */
 
-namespace Cayman\Manager\DbManager;
+namespace Cayman\Manager\EntityManager;
 
 use Cayman\Manager;
 use Cayman\Manager\EntityManager;
