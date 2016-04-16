@@ -97,11 +97,11 @@ class PostgreSql extends Manager implements DbManager
         $pdo = $this->getPdo();
         if (empty($input->parameters)) {
             $statement      = $pdo->query($input->sql);
+            $output->result = true;
         } else {
             $statement      = $pdo->prepare($input->sql);
             $output->result = $statement->execute($input->parameters);
         }
-        $output->result    = true;
         $output->statement = $statement;
         $output->rowCount  = $statement->rowCount();
         
@@ -121,15 +121,10 @@ class PostgreSql extends Manager implements DbManager
         $stmtInput->sql        = $input->sql;
         $stmtInput->parameters = $input->parameters;
         
-        $stmtOutput = $this->dbStatement($stmtInput);
-        if ($input->className) {
-            $output->rows = $stmtOutput->fetchObjects($input->className);
-        } else {
-            $output->rows = $stmtOutput->fetchAssocArrays();
-        }
-        
+        $stmtOutput       = $this->dbStatement($stmtInput);
+        $output->rows     = $stmtOutput->fetchAll($input->className);
         $output->result   = true;
-        $output->rowCount = $stmtOutput->rowCount;
+        $output->rowCount = $stmtOutput->rowCount();
         
         return $output;
     }
