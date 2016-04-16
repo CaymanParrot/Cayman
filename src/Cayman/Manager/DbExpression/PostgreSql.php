@@ -19,7 +19,6 @@ class PostgreSql extends DbExpression
      * 
      * @see http://www.postgresql.org/docs/9.5/static/functions-datetime.html
      * 
-     * @param string $value
      * @return DbExpression
      */
     static function now()
@@ -33,7 +32,6 @@ class PostgreSql extends DbExpression
      * 
      * @see http://www.postgresql.org/docs/9.5/static/functions-datetime.html
      * 
-     * @param string $value
      * @return DbExpression
      */
     static function currentDate()
@@ -47,7 +45,6 @@ class PostgreSql extends DbExpression
      * 
      * @see http://www.postgresql.org/docs/9.5/static/functions-datetime.html
      * 
-     * @param string $value
      * @return DbExpression
      */
     static function currentTime()
@@ -61,7 +58,6 @@ class PostgreSql extends DbExpression
      * 
      * @see http://www.postgresql.org/docs/9.5/static/functions-datetime.html
      * 
-     * @param string $value
      * @return DbExpression
      */
     static function currentTimestamp()
@@ -75,7 +71,6 @@ class PostgreSql extends DbExpression
      * 
      * @see http://www.postgresql.org/docs/9.5/static/functions-datetime.html
      * 
-     * @param string $value
      * @return DbExpression
      */
     static function statementTimestamp()
@@ -84,4 +79,18 @@ class PostgreSql extends DbExpression
         return $exp;
     }
     
+    /**
+     * New expression for current date and time
+     * 
+     * @see http://www.postgresql.org/docs/9.5/static/functions-datetime.html
+     * 
+     * @param string $minutes
+     * @return DbExpression
+     */
+    static function nowPlusMinutes($minutes)
+    {
+        $expStr = sprintf('NOW() + INTERVAL \'%d MINUTE\'', intval($minutes));
+        $exp    = new static($expStr);
+        return $exp;
+    }
 }
