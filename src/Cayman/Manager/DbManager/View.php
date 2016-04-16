@@ -7,6 +7,7 @@ namespace Cayman\Manager\DbManager;
 
 use Cayman\Exception;
 use Cayman\Manager\DbManager;
+use Cayman\Manager\DbManager\Row;
 
 /**
  * Class for View
@@ -71,12 +72,31 @@ abstract class View
     }
     
     /**
+     * SQL statement
+     * @var string
+     */
+    protected $sql;
+    
+    /**
      * Get schema name e.g. 'SELECT * FROM "public"."tbl_user"'
      * @return string
      */
     function getSql()
     {
-        return 'SELECT * FROM ' . $this->getFullName();
+        if (empty($this->sql)) {
+            $this->sql = 'SELECT * FROM ' . $this->getFullName();
+        }
+        
+        return $this->sql;
+    }
+    
+    /**
+     * Set new SQL statement
+     * @param string $sql
+     */
+    function setSql($sql)
+    {
+        $this->sql = $sql;
     }
     
     /**
@@ -97,11 +117,19 @@ abstract class View
     /**
      * Set parameters
      * @param array $parameters
-     * @return array
      */
     function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
+    }
+    
+    /**
+     * Append parameter
+     * @param mixed $parameter
+     */
+    function appendParameter($parameter)
+    {
+        $this->parameters[] = $parameter;
     }
 
     /**
@@ -138,6 +166,22 @@ abstract class View
     function getPrimaryKey()
     {
         return $this->primaryKey;
+    }
+    
+    /**
+     * Select rows
+     * @return Row[]
+     */
+    function selectRows()
+    {
+        $input = new InputForSelect();
+        $input->sql        = $this->getSql();
+        $input->parameters = $this->getParameters();
+        $input->className  = $this->getRowClassName();
+        $output = $this->getDb()->dbSelect($input);
+        $rows   = $output->rows;
+        
+        return $rows;
     }
     
 }
