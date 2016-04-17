@@ -214,20 +214,19 @@ abstract class Application
     
     /**
      * Get service
-     * @param string $type
-     * @param string $id
+     * @param string $alias
      * @return Manager
      * @throws Exception
      */
-    function getService($type, $id = 'default')
+    function getService($alias)
     {
-        if (empty($this->services[$type][$id])) {
-            $this->loadService($type, $id);
+        if (empty($this->services[$alias])) {
+            $this->loadService($alias);
         }
-        if (empty($this->services[$type][$id])) {
-            throw new Exception('Service undefined type: ' . $type . ', id: ' . $id);
+        if (empty($this->services[$alias])) {
+            throw new Exception('Service undefined alias: ' . $alias);
         }
-        return $this->services[$type][$id];
+        return $this->services[$alias];
     }
     
     /**
