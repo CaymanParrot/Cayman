@@ -28,7 +28,8 @@ class HttpApplication extends Application
         $input = new AppInput();
         $input->setData($inputData);
         
-        $api_prefix = $this->getSettings()->application->api_prefix ?: '';
+        $api_prefix = $this->getSettings()->application->api_prefix;
+        $api_prefix = !empty($api_prefix) && is_string($api_prefix) ? $api_prefix : '';
         
         $method  = strtolower($serverData['REQUEST_METHOD']);// e.g. 'GET'
         $uri     = strtolower($serverData['REQUEST_URI']);   // e.g. '/api/v1/account/user/index'
