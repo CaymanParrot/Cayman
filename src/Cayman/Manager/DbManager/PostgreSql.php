@@ -92,7 +92,6 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbStatement(InputForStatement $input)
     {
-        $this->log(__METHOD__ . ' SQL: ' . $input->sql);
         $output = new OutputForStatement();
         
         $pdo = $this->getPdo();
