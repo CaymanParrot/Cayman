@@ -5,20 +5,20 @@
 
 namespace Cayman;
 
-use Manager\AssetManager;
-use Manager\CacheManager;
-use Manager\DbManager;
-use Manager\EmailManager;
-use Manager\EmailManager\Email;
-use Manager\EntityManager;
-use Manager\EventManager;
-use Manager\EventManager\EventContext;
-use Manager\FilterManager;
-use Manager\IdentityManager;
-use Manager\LocaleManager;
-use Manager\LogManager;
-use Manager\QueueManager;
-use Manager\ReleaseManager;
+use Cayman\Manager\AssetManager;
+use Cayman\Manager\CacheManager;
+use Cayman\Manager\DbManager;
+use Cayman\Manager\EmailManager;
+use Cayman\Manager\EmailManager\Email;
+use Cayman\Manager\EntityManager;
+use Cayman\Manager\EventManager;
+use Cayman\Manager\EventManager\EventContext;
+use Cayman\Manager\FilterManager;
+use Cayman\Manager\IdentityManager;
+use Cayman\Manager\LocaleManager;
+use Cayman\Manager\LogManager;
+use Cayman\Manager\QueueManager;
+use Cayman\Manager\ReleaseManager;
 
 /**
  * Abstract class for Application
