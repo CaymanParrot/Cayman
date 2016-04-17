@@ -28,15 +28,18 @@ class HttpApplication extends Application
         $input = new AppInput();
         $input->setData($inputData);
         
-        $api_prefix = $this->getSettings()->application->api_prefix;
-        $api_prefix = !empty($api_prefix) && is_string($api_prefix) ? $api_prefix : '';
+        $apiPrefix = $this->getSettings()->application->api_prefix;
+        $apiPrefix = !empty($apiPrefix) && is_string($apiPrefix) ? $apiPrefix : '';// '/api/v1'
         
         $method  = strtolower($serverData['REQUEST_METHOD']);// e.g. 'GET'
         $uri     = strtolower($serverData['REQUEST_URI']);   // e.g. '/api/v1/account/user/index'
         if ($uri == '/') {
-            $uri = '/index/index';
+            $uri = $apiPrefix . '/index/index';//default entry point
         }
-        $uri = str_replace($api_prefix, '', $uri, $count = 1);
+        $apiPrefixLen = strlen($apiPrefix);
+        if (substr($uri, 0, $apiPrefixLen) == $apiPrefix) {// starts with same prefix
+            $uri = substr($uri, $apiPrefixLen);//take the rest
+        }
         
         do {
             // custom /module/service/action/UUID
