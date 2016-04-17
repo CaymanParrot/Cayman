@@ -28,7 +28,7 @@ class PhpMail extends Manager implements EmailManager
         User <user@example.com>
         User <user@example.com>, Another User <anotheruser@example.com> 
         */
-        $result = '"'. implode('", "', $list) . '"';
+        $result = '<' . implode('>, <', $list) . '>';//let's only get email addresses
         
         return $result;
     }
