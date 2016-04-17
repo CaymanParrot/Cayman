@@ -92,6 +92,7 @@ class PostgreSql extends Manager implements DbManager
      */
     function dbStatement(InputForStatement $input)
     {
+        $this->log(__METHOD__ . ' SQL: ' . $input->sql);
         $output = new OutputForStatement();
         
         $pdo = $this->getPdo();
@@ -122,9 +123,9 @@ class PostgreSql extends Manager implements DbManager
         $stmtInput->parameters = $input->parameters;
         
         $stmtOutput       = $this->dbStatement($stmtInput);
+        $output->result   = $stmtOutput->result;
+        $output->rowCount = $stmtOutput->rowCount;
         $output->rows     = $stmtOutput->fetchAll($input->className);
-        $output->result   = true;
-        $output->rowCount = $stmtOutput->rowCount();
         
         return $output;
     }
@@ -164,10 +165,10 @@ class PostgreSql extends Manager implements DbManager
             . ' ' . $fieldNameList
             . ' ' . $valueList
             . ' RETURNING ' . $input->returnFieldNames;
-        $stmt = $this->dbStatement($stmtInput);
-        $output->result   = true;
-        $output->rowCount = $stmt->rowCount;
-        $output->rows     = $stmt->fetchAll($input->className);
+        $stmtOutput = $this->dbStatement($stmtInput);
+        $output->result   = $stmtOutput->result;
+        $output->rowCount = $stmtOutput->rowCount;
+        $output->rows     = $stmtOutput->fetchAll($input->className);
         
         return $output;
     }
@@ -203,10 +204,10 @@ class PostgreSql extends Manager implements DbManager
             . ' WHERE ' . $input->where
             . ' RETURNING ' . $input->returnFieldNames;
         
-        $stmt = $this->dbStatement($stmtInput);
-        $output->result   = true;
-        $output->rowCount = $stmt->rowCount;
-        $output->rows     = $stmt->fetchAll($input->className);
+        $stmtOutput = $this->dbStatement($stmtInput);
+        $output->result   = $stmtOutput->result;
+        $output->rowCount = $stmtOutput->rowCount;
+        $output->rows     = $stmtOutput->fetchAll($input->className);
         
         return $output;
     }
