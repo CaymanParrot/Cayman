@@ -13,7 +13,7 @@ namespace Cayman\Library;
 class Random
 {
     /**
-     * Generate a random number
+     * Generate a random number/integer
      * @param int $min
      * @param int $max
      * @return int
@@ -41,7 +41,7 @@ class Random
         
         $domainLength = strlen($stringDomain);
         for ($i = 0; $i < $length; $i++) {
-            $number  = static::number(0, $domainLength);
+            $number  = static::number(0, $domainLength - 1);
             $letter  = $stringDomain[$number];
             $string .= $letter;
         }
