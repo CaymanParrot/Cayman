@@ -15,6 +15,8 @@ namespace Cayman;
  */
 class AppInput
 {
+    use Library\ObjectDeHydratorTrait;
+    
     /**
      * Service name
      * @var string

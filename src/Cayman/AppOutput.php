@@ -11,6 +11,7 @@ namespace Cayman;
  */
 class AppOutput
 {
+    use Library\ObjectDeHydratorTrait;
     
     const STATUS_SUCCESS = 'success';
     const STATUS_ERROR   = 'error';

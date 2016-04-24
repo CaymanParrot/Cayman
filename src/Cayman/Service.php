@@ -34,5 +34,5 @@ abstract class Service
      * @param Input $input
      * @return Output
      */
-    abstract function help(Input $input);
+    //abstract function help($input);
 }

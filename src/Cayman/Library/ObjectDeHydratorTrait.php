@@ -25,19 +25,14 @@ trait ObjectDeHydratorTrait
         
         foreach($publicProperties as $key) {
             $val = $this->$key;//read property value
-            
-            if (is_null($val)) {
-                $data[$key] = null;
+            if (is_scalar($val)) {
+                $data[$key] = $val;
             } else {
-                if (is_object($val) && method_exists($val, 'toArray')) {
-                    $data[$key] = $val->toArray();
-                } else {
-                    $data[$key] = $val;
-                }
+                $data[$key] = Arr::toArray($val);
             }
         }
         
-        $data = json_decode(json_encode($data), $assoc = true);
+        //$data = json_decode(json_encode($data), $assoc = true);
         
         return $data;
     }
