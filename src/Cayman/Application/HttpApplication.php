@@ -152,7 +152,7 @@ class HttpApplication extends Application
     }
     
     const PATTERN_BASE_UUID     = '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}';// 8chars-4chars-4chars-4chars-12chars
-    const PATTERN_BASE_ALPHANUM = '[a-z]+[a-z0-9]+';// starts with a letter, a word
+    const PATTERN_BASE_ALPHANUM = '[a-z]+[a-z0-9\-]+';// starts with a letter, a word
     const PATTERN_BASE_DIGITS   = '[0-9]+';
 
     const PATTERN_MODULE  = '(?P<module>'  . self::PATTERN_BASE_ALPHANUM . ')';

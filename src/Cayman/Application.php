@@ -183,20 +183,32 @@ abstract class Application
         return $service;
     }
     
-    private function getServiceClassName($alias)
+    function getServiceClassName($alias)
     {
         $appServices = $this->getSettings()->application->services;
         $namespace   = $appServices->namespace;
         if (empty($namespace)) {
             throw new Exception('Service namespace undefined');
         }
-        $alias      = substr($alias, 0, 1) == '/' ? substr($alias, 1) : $alias;
-        $alias      = strtolower($alias);
-        $alias      = str_replace('/', ' ', $alias);
-        $alias      = ucwords($alias);
-        $alias      = str_replace(' ', '\\', $alias);
-        
-        $className  = $namespace . '\\' . $alias;
+        $alias = substr($alias, 0, 1) == '/' ? substr($alias, 1) : $alias;
+        $alias = strtolower($alias);
+        $alias = preg_replace_callback(// '-abc' ==> 'Abc'
+            '/[-](.)/',
+            function ($matches) {
+                return strtoupper($matches[1]);
+            },
+            $alias
+        );
+        $alias = preg_replace_callback(// '/abc' ==> '/Abc'
+            '/[\/](.)/',
+            function ($matches) {
+                return '/'.strtoupper($matches[1]);
+            },
+            $alias
+        );
+        $alias     = str_replace('/', '\\', $alias);
+        $className = $namespace . '\\' . $alias;
+        // '/system/entity-type' ==> '\My\Application\Service\System\EntityType'
         
         return $className;
     }
