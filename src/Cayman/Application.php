@@ -190,16 +190,20 @@ abstract class Application
         if (empty($namespace)) {
             throw new Exception('Service namespace undefined');
         }
+        // remove 1st char if it is '/'
         $alias = substr($alias, 0, 1) == '/' ? substr($alias, 1) : $alias;
-        $alias = strtolower($alias);
-        $alias = preg_replace_callback(// '-abc' ==> 'Abc'
+        // 1st char upper case
+        $alias = strtoupper(substr($alias, 0, 1)) . strtolower(substr($alias, 1));
+        // '-abc' ==> 'Abc'
+        $alias = preg_replace_callback(
             '/[-](.)/',
             function ($matches) {
                 return strtoupper($matches[1]);
             },
             $alias
         );
-        $alias = preg_replace_callback(// '/abc' ==> '/Abc'
+        // '/abc' ==> '/Abc'
+        $alias = preg_replace_callback(
             '/[\/](.)/',
             function ($matches) {
                 return '/'.strtoupper($matches[1]);
