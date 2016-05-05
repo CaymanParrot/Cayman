@@ -4,7 +4,7 @@
  * File for password class
  */
 
-namespace My\Library;
+namespace Cayman\Library;
 
 /**
  * Class for password functions
