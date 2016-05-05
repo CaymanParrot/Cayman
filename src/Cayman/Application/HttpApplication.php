@@ -31,11 +31,14 @@ class HttpApplication extends Application
         $apiPrefix = $this->getSettings()->application->api_prefix;
         $apiPrefix = !empty($apiPrefix) && is_string($apiPrefix) ? $apiPrefix : '';// '/api/v1'
         
+        $qryStr  = strtolower($serverData['QUERY_STRING']);  // e.g. 'a=b&c=d'
         $method  = strtolower($serverData['REQUEST_METHOD']);// e.g. 'GET'
         $uri     = strtolower($serverData['REQUEST_URI']);   // e.g. '/api/v1/account/user/index'
         if ($uri == '/') {
             $uri = $apiPrefix . '/index/index';//default entry point
         }
+        $uri = str_replace([$qryStr, '?'], '', $uri);//remove parameters and '?'
+        
         $apiPrefixLen = strlen($apiPrefix);
         if (substr($uri, 0, $apiPrefixLen) == $apiPrefix) {// starts with same prefix
             $uri = substr($uri, $apiPrefixLen);//take the rest
