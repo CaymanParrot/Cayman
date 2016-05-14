@@ -16,6 +16,11 @@ use Cayman\AppOutput;
  */
 class HttpApplication extends Application
 {
+    /**
+     * Server data - set after using loadInput()
+     * @var array
+     */
+    protected $serverData = [];
     
     /**
      * Load input
@@ -25,6 +30,8 @@ class HttpApplication extends Application
      */
     function loadInput(array $serverData = [], array $inputData = [])
     {
+        $this->serverData = $serverData;
+        
         $input = new AppInput();
         $input->setData($inputData);
         
@@ -275,4 +282,52 @@ class HttpApplication extends Application
         }
         return $result;
     }
+    
+    /**
+     * The name of the server host under which the current script is executing. If the script is running on a
+     * virtual host, this will be the value defined for that virtual host.
+     * 
+     * @example return value 'www.example.com'
+     * 
+     * @return string
+     * @see http://php.net/manual/en/reserved.variables.server.php
+     */    
+    function getServerDomainName()
+    {
+        $result = isset($this->serverData['SERVER_NAME']) ? $this->serverData['SERVER_NAME'] : null;
+        
+        return $result;
+    }
+    
+    /**
+     * The IP address from which the user is viewing the current page.
+     * @return string
+     * @see http://php.net/manual/en/reserved.variables.server.php
+     */    
+    function getClientIpAddress()
+    {
+        $result = null;
+        
+        $lookupKeys = [
+            'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP',
+            'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR',
+        ];
+        $flagNoPrivateIpAccepted = FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+        foreach ($lookupKeys as $key){
+            if (array_key_exists($key, $this->serverData) === true){
+                $ipList = explode(',', $this->serverData[$key]);
+                foreach ($ipList as $ip){
+                    $ip = trim($ip); // just to be safe
+                    if (filter_var($ip, FILTER_VALIDATE_IP, $flagNoPrivateIpAccepted) !== false){
+                        $result = $ip;
+                        break 2;//exit both loops
+                    }
+                }
+            }
+        }
+        
+        return $result;
+    }
+    
+    
 }
