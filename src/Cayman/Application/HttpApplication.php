@@ -287,14 +287,35 @@ class HttpApplication extends Application
      * The name of the server host under which the current script is executing. If the script is running on a
      * virtual host, this will be the value defined for that virtual host.
      * 
+     * BUT https://www.example.com may be handled by http://example.com
+     * This function will give us example.com
+     * 
      * @example return value 'www.example.com'
      * 
      * @return string
      * @see http://php.net/manual/en/reserved.variables.server.php
      */    
-    function getServerDomainName()
+    function getHttpServerDomainName()
     {
         $result = isset($this->serverData['SERVER_NAME']) ? $this->serverData['SERVER_NAME'] : null;
+        
+        return $result;
+    }
+    
+    /**
+     * Contents of the Host: header from the current request, if there is one.
+     * 
+     * BUT https://www.example.com may be handled by http://example.com
+     * This function will give us www.example.com, though it can be tampered
+     * 
+     * @example return value 'www.example.com'
+     * 
+     * @return string
+     * @see http://php.net/manual/en/reserved.variables.server.php
+     */    
+    function getHttpHostDomainName()
+    {
+        $result = isset($this->serverData['HTTP_HOST']) ? $this->serverData['HTTP_HOST'] : null;
         
         return $result;
     }
@@ -304,7 +325,7 @@ class HttpApplication extends Application
      * @return string
      * @see http://php.net/manual/en/reserved.variables.server.php
      */    
-    function getClientIpAddress()
+    function getHttpClientIpAddress()
     {
         $result = null;
         
