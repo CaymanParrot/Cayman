@@ -100,7 +100,13 @@ class PostgreSql extends Manager implements DbManager
             $output->result = true;
         } else {
             $statement      = $pdo->prepare($input->sql);
-            $output->result = $statement->execute($input->parameters);
+            
+            // way 1
+            //$output->result = $statement->execute($input->parameters);
+            
+            //way 2
+            $this->dbBindParameters($statement, $input->parameters);
+            $output->result = $statement->execute();
         }
         $output->statement = $statement;
         $output->rowCount  = $statement->rowCount();
@@ -360,10 +366,42 @@ SQL;
     {
         $view = new $viewClassname();
         if (!($view instanceof View)) {
-            throw new Exception('Invalida view implementation by class: ' . $viewClassname);
+            throw new Exception('Invalid view implementation by class: ' . $viewClassname);
         }
         $view->setDb($this);
         
         return $view;
+    }
+    
+    /**
+     * Get PDO parameter type by specifically handling null, boolean and integer types
+     * otherwise, it returns PDO::PARAM_STR as usual
+     * @param mixed $value
+     * @return int
+     */
+    function dbGetParamType($value)
+    {
+        if (is_null($value)) return \PDO::PARAM_NULL;
+        if (is_bool($value)) return \PDO::PARAM_BOOL;
+        if (is_int($value))  return \PDO::PARAM_INT;
+        
+        return \PDO::PARAM_STR;
+    }
+    
+    /**
+     * Bind parameters to statement
+     * @param \PDOStatement $statement
+     * @param array $params
+     * @return void
+     */
+    function dbBindParameters(\PDOStatement $statement, array $params = [])
+    {
+        foreach($params as $idx => $value) {
+            $type = $this->dbGetParamType($value);
+            // 0-based array ==> 1-based array
+            // ':name'
+            $paramKey = is_int($idx) ? $idx + 1 : $idx;
+            $statement->bindValue($paramKey, $value, $type);
+        }
     }
 }
