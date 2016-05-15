@@ -8,6 +8,7 @@ namespace Cayman\Manager\DbManager;
 use Cayman\Exception;
 use Cayman\Manager\DbManager;
 use Cayman\Manager\DbManager\Row;
+use Cayman\Manager\DbManager\OutputForSelect;
 
 /**
  * Class for View
@@ -169,16 +170,27 @@ abstract class View
     }
     
     /**
-     * Select rows
-     * @return Row[]
+     * Select output
+     * @return OutputForSelect
      */
-    function selectRows()
+    function select()
     {
         $input = new InputForSelect();
         $input->sql        = $this->getSql();
         $input->parameters = $this->getParameters();
         $input->className  = $this->getRowClassName();
         $output = $this->getDb()->dbSelect($input);
+        
+        return $output;
+    }
+    
+    /**
+     * Select rows
+     * @return Row[]
+     */
+    function selectRows()
+    {
+        $output = $this->select();
         $rows   = $output->rows;
         
         return $rows;
