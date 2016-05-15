@@ -1,12 +1,12 @@
 <?php
 /**
- * File for Output interface
+ * File for base application output class
  */
 
 namespace Cayman;
 
 /**
- * Interface for Output
+ * Class for base application output
  *
  */
 class AppOutput
@@ -43,6 +43,12 @@ class AppOutput
     }
     
     /**
+     * Array of error messages
+     * @var array 
+     */
+    public $errors = [];
+    
+    /**
      * Append error
      * @param Error  $row
      * @param string $key
@@ -50,7 +56,7 @@ class AppOutput
      */
     public function appendError(Error $row, $key = null)
     {
-        $this->status = Output::STATUS_ERROR;
+        $this->status = static::STATUS_ERROR;
         if (is_null($key)) {
             $this->errors[] = $row;
         } else {
@@ -112,33 +118,18 @@ class AppOutput
     
     /**
      * Array of data
-     * @var array
+     * @var ServiceOutput
      */
-    public $output = [];
+    public $output;
     
     /**
      * Set output
-     * @param mixed $output
+     * @param ServiceOutput $output
      * @return void
      */
-    public function setOutput($output)
+    public function setOutput(ServiceOutput $output)
     {
         $this->output = $output;
-    }
-    
-    /**
-     * Append data row
-     * @param mixed  $row
-     * @param string $key
-     * @return void
-     */
-    public function appendOutput($row, $key = null)
-    {
-        if (is_null($key)) {
-            $this->output[] = $row;
-        } else {
-            $this->output[$key] = $row;
-        }
     }
     
 }
